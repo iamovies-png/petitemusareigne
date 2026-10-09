@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="theme-color" content="#3b2416">
+  <title>Le monde de petitemusareigne</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Georgia', 'Times New Roman', serif;
+    }
+
+    /* Curseur custom uniquement sur desktop */
+    @media (hover: hover) and (pointer: fine) {
+      * { cursor: none; }
+    }
+    @media (hover: none), (pointer: coarse) {
+      * { cursor: auto; }
+      .cursor, .cursor-glow { display: none !important; }
+    }
+
+    html, body {
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: #2a1c10;
+      color: #f2e6d5;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 40px;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(120, 80, 40, 0.4) 0%, transparent 55%),
+        radial-gradient(circle at 80% 70%, rgba(80, 60, 30, 0.4) 0%, transparent 55%),
+        linear-gradient(180deg, #2a1c10 0%, #1a1108 100%);
+      background-attachment: fixed;
+    }
+
+    /* ============ CURSEUR DOUX ============ */
+    .cursor {
+      position: fixed;
+      width: 14px;
+      height: 14px;
+      background: radial-gradient(circle, #f5d6a8, #b8894d);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 12px rgba(245, 214, 168, 0.8), 0 0 25px rgba(184, 137, 77, 0.5);
+      transition: width 0.2s, height 0.2s;
+    }
+
+    .cursor-glow {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(245, 214, 168, 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99998;
+      transform: translate(-50%, -50%);
+      filter: blur(1px);
+      opacity: 0.7;
+    }
+
+    /* ============ FOND DÉCORATIF ============ */
+    .bg-decor {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /* ============ MUR DE PIERRE ANCIEN (fond complet) ============ */
+    .stone-wall {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.85;
+      background-color: #3a2a1a;
+
+      /* Pierres irrégulières : plusieurs couches de dégradés qui imitent des blocs */
+      background-image:
+        /* Grain / texture fine */
+        radial-gradient(circle at 20% 30%, rgba(255, 230, 190, 0.06) 0%, transparent 15%),
+        radial-gradient(circle at 70% 60%, rgba(255, 220, 180, 0.05) 0%, transparent 12%),
+        radial-gradient(circle at 40% 80%, rgba(255, 220, 180, 0.04) 0%, transparent 10%),
+        radial-gradient(circle at 85% 20%, rgba(255, 220, 180, 0.05) 0%, transparent 12%),
+        radial-gradient(circle at 10% 65%, rgba(255, 220, 180, 0.04) 0%, transparent 10%),
+
+        /* Blocs de pierre ligne 1 (avec joints verticaux décalés) */
+        linear-gradient(90deg,
+          #5a4230 0px, #5a4230 78px,
+          #4a3524 78px, #4a3524 82px,
+          #6b5040 82px, #6b5040 160px,
+          #4a3524 160px, #4a3524 164px,
+          #5e4634 164px, #5e4634 240px,
+          #4a3524 240px, #4a3524 244px,
+          #6a4f3c 244px, #6a4f3c 320px,
+          #4a3524 320px, #4a3524 324px,
+          #58402e 324px, #58402e 400px,
+          #4a3524 400px, #4a3524 404px,
+          #6d5341 404px, #6d5341 480px,
+          #4a3524 480px, #4a3524 484px,
+          #5a4230 484px, #5a4230 560px),
+        
+        /* Blocs de pierre ligne 2 (décalés) */
+        linear-gradient(90deg,
+          #4e3826 0px, #4e3826 40px,
+          #5e4634 40px, #5e4634 120px,
+          #4a3524 120px, #4a3524 124px,
+          #644a38 124px, #644a38 200px,
+          #4a3524 200px, #4a3524 204px,
+          #553f2d 204px, #553f2d 280px,
+          #4a3524 280px, #4a3524 284px,
+          #6b5040 284px, #6b5040 360px,
+          #4a3524 360px, #4a3524 364px,
+          #5e4634 364px, #5e4634 440px,
+          #4a3524 440px, #4a3524 444px,
+          #5a4230 444px, #5a4230 520px);
+
+      /* Joints horizontaux entre les rangées */
+      background-size:
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 84px,
+        100% 84px;
+
+      background-position:
+        0 0, 0 0, 0 0, 0 0, 0 0,
+        0 0,
+        0 42px;
+
+      background-repeat: repeat;
+      filter: brightness(0.85) saturate(1.1);
+      /* Léger vignettage pour ambiance ancienne */
+      box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Une deuxième couche de pierres, plus subtile, pour casser la régularité */
+    .stone-wall::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image:
+        linear-gradient(0deg,
+          rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 78px,
+          transparent 78px, transparent 84px,
+          rgba(0, 0, 0, 0.15) 84px, rgba(0, 0, 0, 0.15) 162px,
+          transparent 162px, transparent 168px,
+          rgba(0, 0, 0, 0.15) 168px, rgba(0, 0, 0, 0.15) 246px,
+          transparent 246px, transparent 252px);
+      opacity: 0.6;
+      mix-blend-mode: multiply;
+    }
+
+    /* Taches / patine sur la pierre */
+    .stone-wall::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image:
+        radial-gradient(ellipse 200px 100px at 15% 25%, rgba(80, 50, 30, 0.4) 0%, transparent 70%),
+        radial-gradient(ellipse 250px 120px at 80% 60%, rgba(60, 35, 20, 0.4) 0%, transparent 70%),
+        radial-gradient(ellipse 180px 90px at 45% 85%, rgba(70, 45, 25, 0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 150px 80px at 60% 15%, rgba(90, 60, 35, 0.3) 0%, transparent 70%);
+      mix-blend-mode: multiply;
+      opacity: 0.7;
+    }    /* Bois et végétation à droite */
+    .wood-nature {
+      position: absolute;
+      top: 0; right: 0;
+      width: 22%;
+      height: 100%;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(90, 60, 30, 0.5) 0px,
+          rgba(90, 60, 30, 0.5) 8px,
+          rgba(70, 45, 20, 0.6) 8px,
+          rgba(70, 45, 20, 0.6) 10px,
+          rgba(110, 75, 40, 0.4) 10px,
+          rgba(110, 75, 40, 0.4) 12px
+        );
+      mask-image: linear-gradient(to left, black 60%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%);
+      opacity: 0.65;
+    }
+
+    /* Feuillage léger par-dessus */
+    .foliage {
+      position: absolute;
+      top: 0; right: 0;
+      width: 28%;
+opacity: 0.7;
+      height: 100%;
+      background-image:
+        radial-gradient(circle at 80% 15%, rgba(120, 150, 90, 0.3) 0%, transparent 20%),
+        radial-gradient(circle at 90% 40%, rgba(100, 130, 70, 0.25) 0%, transparent 22%),
+        radial-gradient(circle at 75% 65%, rgba(140, 170, 100, 0.25) 0%, transparent 20%),
+        radial-gradient(circle at 85% 85%, rgba(110, 140, 80, 0.3) 0%, transparent 18%);
+      mask-image: linear-gradient(to left, black 50%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, black 50%, transparent 100%);
+      animation: foliageSway 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes foliageSway {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-15px); }
+    }
+
+    /* Halos chaleureux (bougies / lanternes) */
+    .warm-halo {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+      animation: haloPulse 8s infinite alternate ease-in-out;
+      will-change: transform, opacity;
+    }
+
+    .halo1 { width: 400px; height: 400px; background: #ff9a4a; top: 10%; left: 15%; }
+    .halo2 { width: 350px; height: 350px; background: #ffb35c; bottom: 15%; right: 20%; animation-delay: -3s; }
+    .halo3 { width: 300px; height: 300px; background: #d97a3a; top: 50%; left: 45%; animation-delay: -6s; opacity: 0.25; }
+
+    @keyframes haloPulse {
+      0% { transform: scale(1); opacity: 0.25; }
+      100% { transform: scale(1.15); opacity: 0.45; }
+    }
+
+    /* Vignette / assombrissement bords */
+    .vignette {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(20, 10, 5, 0.6) 100%);
+    }
+
+    /* ============ CONTENU ============ */
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    /* ---------- TITRE ---------- */
+    .main-title {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .title-line {
+      font-family: 'Georgia', serif;
+      font-size: clamp(1.8rem, 6vw, 3.4rem);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: 2px;
+      color: #f5e6c8;
+      text-shadow:
+        0 0 15px rgba(255, 180, 100, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.6);
+      line-height: 1.2;
+
+    } 
+
+    /* Flash du titre au survol */
+    .title-line {
+      transition: all 0.3s ease;
+    }
+
+    .title-line:hover {
+      animation: titleFlash 0.8s ease-out;
+      color: #ffffff;
+      text-shadow:
+        0 0 30px #ffd9a0,
+        0 0 60px #ff9a4a,
+        0 0 100px #ff7a2a,
+        0 0 150px #ff5a1a;
+    }
+
+    @keyframes titleFlash {
+      0% { filter: brightness(1); transform: scale(1); }
+      15% { filter: brightness(4) blur(2px); transform: scale(1.05); }
+      30% { filter: brightness(2.5) blur(1px); transform: scale(1.02); }
+      50% { filter: brightness(3.5) blur(0.5px); transform: scale(1.04); }
+      100% { filter: brightness(1) blur(0); transform: scale(1); }
+    }
+
+     /* Flash du titre au survol */
+    .title-line {
+      transition: all 0.3s ease;
+    }
+
+    .title-line:hover {
+      animation: titleFlash 0.8s ease-out;
+      color: #ffffff;
+      text-shadow:
+        0 0 30px #ffd9a0,
+        0 0 60px #ff9a4a,
+        0 0 100px #ff7a2a,
+        0 0 150px #ff5a1a;
+    }
+
+    @keyframes titleFlash {
+      0% {
+        filter: brightness(1);
+        transform: scale(1);
+      }
+      15% {
+        filter: brightness(4) blur(2px);
+        transform: scale(1.05);
+      }
+      30% {
+        filter: brightness(2.5) blur(1px);
+        transform: scale(1.02);
+      }
+      50% {
+        filter: brightness(3.5) blur(0.5px);
+        transform: scale(1.04);
+      }
+      100% {
+        filter: brightness(1) blur(0);
+        transform: scale(1);
+      }
+    }
+
+    .title-line.bold {
+      font-weight: 700;
+      font-style: normal;
+      color: #ffd9a0;
+      text-shadow:
+        0 0 20px rgba(255, 160, 80, 0.7),
+        0 0 40px rgba(255, 140, 60, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ---------- CADRE PHOTO CHAT ---------- */
+    .cat-frame {
+      position: relative;
+      width: min(90%, 420px);
+      border-radius: 20px;
+      padding: 12px;
+      background:
+        linear-gradient(145deg, #6b4a2a, #3a2415);
+      box-shadow:
+        0 0 0 2px rgba(255, 200, 140, 0.3),
+        0 20px 40px -15px rgba(0, 0, 0, 0.8),
+        0 0 60px rgba(255, 160, 80, 0.25);
+      transition: transform 0.4s, box-shadow 0.4s;
+      animation: frameFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes frameFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .cat-frame:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow:
+        0 0 0 2px rgba(255, 220, 160, 0.6),
+        0 25px 50px -15px rgba(0, 0, 0, 0.9),
+        0 0 90px rgba(255, 180, 100, 0.5);
+    }
+
+    .cat-frame::before,
+    .cat-frame::after {
+      content: '❦';
+      position: absolute;
+      font-size: 1.4rem;
+      color: #ffd9a0;
+      text-shadow: 0 0 10px rgba(255, 180, 100, 0.8);
+      opacity: 0.8;
+    }
+
+    .cat-frame::before { top: -12px; left: 20px; }
+    .cat-frame::after { bottom: -12px; right: 20px; }
+
+    .cat-img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      filter: saturate(1.05) contrast(1.05);
+    }
+
+    .cat-caption {
+      text-align: center;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: #e8d4b0;
+      margin-top: 1rem;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+      letter-spacing: 1px;
+    }
+
+    /* ---------- TEXTE POÉTIQUE ---------- */
+    .poetic-text {
+      max-width: 620px;
+      text-align: center;
+      font-size: 1.1rem;
+      line-height: 1.9;
+      color: #e8d9bd;
+      font-style: italic;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .poetic-text p {
+      margin-bottom: 0.8rem;
+    }
+
+    .poetic-text .deco-line {
+      display: block;
+      margin: 1rem auto;
+      width: 120px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #ffb877, transparent);
+      position: relative;
+    }
+
+    .poetic-text .deco-line::before {
+      content: '❦';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #2a1c10;
+      padding: 0 10px;
+      color: #ffb877;
+      font-size: 1rem;
+    }
+
+    /* ---------- SECTION RÉSEAUX ---------- */
+    .socials-title {
+      font-size: 1.5rem;
+      font-style: italic;
+      letter-spacing: 2px;
+      color: #ffd9a0;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 20px rgba(255, 160, 80, 0.5);
+    }
+
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding: 1rem 1.8rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid transparent;
+      min-width: 220px;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .social-btn svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .social-btn.tiktok {
+      background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+      color: #f5e6c8;
+      border-color: rgba(255, 200, 140, 0.4);
+      box-shadow:
+        0 0 20px rgba(255, 100, 150, 0.2),
+        0 0 30px rgba(100, 200, 255, 0.2),
+        0 10px 25px -10px rgba(0, 0, 0, 0.8);
+    }
+
+    .social-btn.tiktok:hover {
+      transform: translateY(-4px) scale(1.03);
+      border-color: #ff5c8a;
+      box-shadow:
+        0 0 30px rgba(255, 100, 150, 0.5),
+        0 0 50px rgba(100, 200, 255, 0.4),
+        0 15px 30px -10px rgba(0, 0, 0, 0.9);
+      color: #fff;
+    }
+
+    .social-btn.instagram {
+      background: linear-gradient(135deg, #8a4a6a, #5a2a4a, #3a1a2a);
+      color: #f5e6c8;
+      border-color: rgba(255, 200, 140, 0.4);
+      box-shadow:
+        0 0 20px rgba(255, 100, 150, 0.2),
+        0 0 30px rgba(255, 180, 100, 0.2),
+        0 10px 25px -10px rgba(0, 0, 0, 0.8);
+    }
+
+    .social-btn.instagram:hover {
+      transform: translateY(-4px) scale(1.03);
+      border-color: #ff9a4a;
+      box-shadow:
+        0 0 30px rgba(255, 100, 150, 0.5),
+        0 0 50px rgba(255, 180, 100, 0.4),
+        0 15px 30px -10px rgba(0, 0, 0, 0.9);
+      color: #fff;
+    }
+
+    /* ---------- SECTION DÉCO ---------- */
+    .deco-section {
+      width: 100%;
+      text-align: center;
+    }
+
+    .deco-title {
+      font-size: 1.4rem;
+      font-style: italic;
+      color: #ffd9a0;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 0 15px rgba(255, 160, 80, 0.5);
+    }
+
+    .deco-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .deco-card {
+      background: linear-gradient(145deg, rgba(60, 40, 25, 0.8), rgba(35, 22, 12, 0.9));
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 200, 140, 0.25);
+      border-radius: 18px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      box-shadow:
+        0 10px 25px -10px rgba(0, 0, 0, 0.8),
+        inset 0 1px 0 rgba(255, 200, 140, 0.15);
+      transition: all 0.35s ease;
+      color: #e8d9bd;
+    }
+
+    .deco-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 200, 140, 0.6);
+      box-shadow:
+        0 20px 35px -10px rgba(0, 0, 0, 0.9),
+        0 0 40px rgba(255, 160, 80, 0.3),
+        inset 0 1px 0 rgba(255, 220, 160, 0.3);
+    }
+
+    .deco-icon {
+      font-size: 2rem;
+      margin-bottom: 0.6rem;
+      display: block;
+      filter: drop-shadow(0 0 10px rgba(255, 180, 100, 0.6));
+    }
+
+    .deco-label {
+      font-size: 1rem;
+      font-style: italic;
+      letter-spacing: 1px;
+      color: #ffd9a0;
+    }
+
+    /* ---------- SIGNATURE ---------- */
+    .signature {
+      text-align: center;
+      font-size: 0.95rem;
+      padding: 1.5rem 0 0.5rem;
+      color: #b8956a;
+      letter-spacing: 2px;
+      border-top: 1px solid rgba(255, 200, 140, 0.2);
+      margin-top: 1.5rem;
+      font-style: italic;
+      width: 100%;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ---------- FEUILLES QUI TOMBENT ---------- */
+    .falling-leaf {
+      position: fixed;
+      top: -50px;
+      font-size: 1.4rem;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0;
+      user-select: none;
+      will-change: transform, opacity;
+    }
+
+    .falling-leaf.fall {
+      animation: leafFall linear forwards;
+    }
+
+    @keyframes leafFall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.9;
+      }
+      90% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(105vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* =====================================================
+       MODE MOBILE
+       ===================================================== */
+    @media (max-width: 768px) {
+      body { background-attachment: scroll; }
+      .wrapper { padding: 1.5rem 1rem; gap: 2rem; }
+
+      .title-line {
+        font-size: clamp(1.6rem, 8vw, 2.4rem);
+      }
+
+      .stone-wall, .wood-nature, .foliage {
+        width: 25%;
+        opacity: 0.5;
+      }
+
+      .cat-frame {
+        width: 85%;
+        padding: 8px;
+      }
+
+      .poetic-text {
+        font-size: 1rem;
+        padding: 0 0.5rem;
+      }
+
+      .social-btn {
+        font-size: 0.95rem;
+        padding: 0.85rem 1.4rem;
+        min-width: 180px;
+      }
+
+      .deco-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.9rem;
+      }
+
+      .deco-card {
+        padding: 1.2rem 0.8rem;
+      }
+
+      .deco-icon {
+        font-size: 1.6rem;
+      }
+
+      .deco-label {
+        font-size: 0.85rem;
+      }
+
+      .falling-leaf {
+        font-size: 1.1rem;
+      }
+
+      .halo1 { width: 250px; height: 250px; }
+      .halo2 { width: 220px; height: 220px; }
+      .halo3 { width: 180px; height: 180px; }
+      .warm-halo { filter: blur(55px); }
+    }
+
+    @media (max-width: 420px) {
+      .title-line { font-size: 1.5rem; }
+      .social-btn { min-width: 160px; font-size: 0.88rem; padding: 0.75rem 1.2rem; }
+      .deco-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============ CHEMINÉE DÉCORATIVE ============ */
+    .fireplace-section {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+
+    .fireplace {
+      position: relative;
+      width: min(90%, 500px);
+      height: 280px;
+      background:
+        linear-gradient(180deg, #4a2e18 0%, #3a2210 40%, #2a1808 100%);
+      border-radius: 12px 12px 0 0;
+      box-shadow:
+        0 20px 40px -15px rgba(0, 0, 0, 0.9),
+        0 0 60px rgba(255, 140, 60, 0.15),
+        inset 0 0 30px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+    }
+
+    /* Manteau / linteau de la cheminée */
+    .fireplace::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -10px; right: -10px;
+      height: 22px;
+      background: linear-gradient(180deg, #5a3a1e, #3a2210);
+      border-radius: 6px;
+      box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 200, 140, 0.2);
+      z-index: 2;
+    }
+
+    /* Foyer (creux noir) */
+    .fireplace-foyer {
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 70%;
+      background: radial-gradient(ellipse at bottom, #1a0a02 0%, #000 80%);
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      box-shadow: inset 0 0 40px #000;
+    }
+
+    /* Flammes */
+    .flame {
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 80px;
+      background: radial-gradient(ellipse at bottom, #fff4a8 0%, #ffb340 25%, #ff6a1a 55%, #c93000 80%, transparent 100%);
+      border-radius: 50% 50% 20% 20%;
+      filter: blur(2px);
+      animation: flameFlicker 0.4s infinite alternate;
+      mix-blend-mode: screen;
+      opacity: 0.95;
+    }
+
+    .flame::before,
+    .flame::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at bottom, #ffe680 0%, #ffa020 40%, #ff5a00 80%, transparent 100%);
+      border-radius: 50% 50% 20% 20%;
+      mix-blend-mode: screen;
+    }
+
+    .flame::before {
+      left: -15px;
+      height: 80%;
+      animation: flameFlicker 0.6s infinite alternate-reverse;
+      opacity: 0.7;
+    }
+
+    .flame::after {
+      right: -15px;
+      height: 90%;
+      animation: flameFlicker 0.5s infinite alternate;
+      opacity: 0.8;
+    }
+
+    @keyframes flameFlicker {
+      0% { transform: translateX(-50%) scaleY(1) scaleX(1); filter: blur(2px) brightness(1); }
+      100% { transform: translateX(-50%) scaleY(1.15) scaleX(0.92); filter: blur(3px) brightness(1.2); }
+    }
+
+    /* Braises / lueur */
+    .ember-glow {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 60px;
+      background: radial-gradient(ellipse, rgba(255, 140, 60, 0.6) 0%, transparent 70%);
+      filter: blur(15px);
+      animation: emberPulse 2s infinite alternate;
+    }
+
+    @keyframes emberPulse {
+      0% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+      100% { opacity: 0.9; transform: translateX(-50%) scale(1.1); }
+    }
+
+    /* Étincelles qui montent */
+    .spark {
+      position: absolute;
+      bottom: 30%;
+      width: 3px;
+      height: 3px;
+      background: #ffb340;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #ffb340, 0 0 12px #ff6a1a;
+      pointer-events: none;
+      animation: sparkRise 2s linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes sparkRise {
+      0% { transform: translateY(0) scale(1); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(-120px) scale(0.3); opacity: 0; }
+    }
+
+    /* Bûches */
+    .log {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 16px;
+      background: linear-gradient(180deg, #6b4a2a, #3a2210);
+      border-radius: 8px;
+      box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        inset 0 2px 0 rgba(255, 200, 140, 0.2);
+    }
+
+    .log.log2 {
+      bottom: 18%;
+      transform: translateX(-50%) rotate(-8deg);
+      width: 90px;
+    }
+
+    .log.log3 {
+      bottom: 18%;
+      transform: translateX(-50%) rotate(8deg);
+      width: 90px;
+    }
+
+    /* Décorations sur le manteau */
+    .mantel-decor {
+      position: absolute;
+      top: 8px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      padding: 0 20px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .mantel-item {
+      font-size: 1.6rem;
+      filter: drop-shadow(0 0 8px rgba(255, 180, 100, 0.8));
+      animation: mantelSway 4s ease-in-out infinite alternate;
+    }
+
+    .mantel-item:nth-child(2) { animation-delay: -1s; }
+    .mantel-item:nth-child(3) { animation-delay: -2s; }
+    .mantel-item:nth-child(4) { animation-delay: -3s; }
+
+    @keyframes mantelSway {
+      0% { transform: translateY(0) rotate(-2deg); }
+      100% { transform: translateY(-3px) rotate(2deg); }
+    }
+
+    /* Petit tapis devant la cheminée */
+    .rug {
+      width: min(80%, 400px);
+      height: 30px;
+      margin: -10px auto 0;
+      background:
+        repeating-linear-gradient(90deg, #6b1a1a 0px, #6b1a1a 10px, #8a3a1a 10px, #8a3a1a 20px),
+        #6b1a1a;
+      border-radius: 50%;
+      box-shadow:
+        0 8px 15px -5px rgba(0, 0, 0, 0.7),
+        inset 0 0 10px rgba(0, 0, 0, 0.5);
+      transform: perspective(200px) rotateX(40deg);
+    }
+
+    /* Feuillage suspendu */
+    .hanging-plants {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      pointer-events: none;
+      z-index: 5;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 5%;
+    }
+
+    .plant-vine {
+      width: 3px;
+      background: linear-gradient(180deg, #4a6b2a, #2a3a14);
+      position: relative;
+      animation: vineSway 5s ease-in-out infinite alternate;
+    }
+
+    .plant-vine::before {
+      content: '🌿';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.8rem;
+      filter: drop-shadow(0 0 6px rgba(120, 180, 80, 0.5));
+    }
+
+    @keyframes vineSway {
+      0% { transform: rotate(-3deg); }
+      100% { transform: rotate(3deg); }
+    }
+
+    /* Version mobile */
+    @media (max-width: 768px) {
+      .fireplace {
+        height: 220px;
+      }
+      .flame {
+        width: 45px;
+        height: 60px;
+      }
+      .mantel-item {
+        font-size: 1.2rem;
+      }
+      .plant-vine::before {
+        font-size: 1.3rem;
+      }
+    }
+
+
+    /* ============ LIANES SUSPENDUES (côté droit) ============ */
+    .hanging-vines {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 5;
+      overflow: hidden;
+      mask-image: linear-gradient(to left, black 60%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%);
+    }
+
+    /* Chaque liane */
+    .vine {
+      position: absolute;
+      top: 0;
+      width: 3px;
+      background: linear-gradient(180deg,
+        #2a3a14 0%,
+        #4a6b2a 30%,
+        #3a5a1e 60%,
+        #2a3a14 100%);
+      border-radius: 2px;
+      box-shadow: 0 0 4px rgba(60, 100, 30, 0.4);
+      transform-origin: top center;
+      animation: vineSwayNatural 6s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+
+    /* Petites feuilles tout le long de la liane */
+    .vine::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-image:
+        radial-gradient(ellipse 8px 5px at 100% 10%, #5a8a2a 0%, transparent 100%),
+        radial-gradient(ellipse 8px 5px at 0% 20%, #6a9a3a 0%, transparent 100%),
+        radial-gradient(ellipse 8px 5px at 100% 30%, #4a7a1e 0%, transparent 100%),
+        radial-gradient(ellipse 8px 5px at 0% 40%, #5a8a2a 0%, transparent 100%),
+        radial-gradient(ellipse 8px 5px at 100% 50%, #6a9a3a 0%, transparent 100%),
+        radial-gradient(ellipse 8px 5px at 0% 60%, #4a7a1e 0%, transparent 100%),
+        radial-gradient(ellipse 8px 5px at 100% 70%, #5a8a2a 0%, transparent 100%),
+        radial-gradient(ellipse 8px 5px at 0% 80%, #6a9a3a 0%, transparent 100%),
+        radial-gradient(ellipse 8px 5px at 100% 90%, #4a7a1e 0%, transparent 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* Fleurs au bout des lianes */
+    .vine::after {
+      content: '🌸';
+      position: absolute;
+      bottom: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      filter: drop-shadow(0 0 8px rgba(255, 180, 200, 0.7));
+      animation: flowerBloom 4s ease-in-out infinite alternate;
+    }
+
+    /* Variantes de fleurs selon la liane */
+    .vine.v2::after { content: '🌺'; font-size: 1.4rem; }
+    .vine.v3::after { content: '🌼'; font-size: 1.3rem; }
+    .vine.v4::after { content: '💮'; font-size: 1.4rem; }
+    .vine.v5::after { content: '🌷'; font-size: 1.4rem; }
+    .vine.v6::after { content: '🍃'; font-size: 1.5rem; }
+    .vine.v7::after { content: '🌿'; font-size: 1.5rem; }
+
+    /* Balancement naturel */
+    @keyframes vineSwayNatural {
+      0%   { transform: rotate(-4deg); }
+      50%  { transform: rotate(2deg); }
+      100% { transform: rotate(-3deg); }
+    }
+
+    /* Les fleurs "respirent" */
+    @keyframes flowerBloom {
+      0% { transform: translateX(-50%) scale(1) rotate(-5deg); }
+      100% { transform: translateX(-50%) scale(1.08) rotate(5deg); }
+    }
+
+    /* Bourgeons le long des lianes (petits points décoratifs) */
+    .vine .bud {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, #ffc8d8, #e88aa8);
+      border-radius: 50%;
+      box-shadow: 0 0 6px rgba(255, 180, 200, 0.8);
+      animation: budPulse 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes budPulse {
+      0% { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(1.3); opacity: 1; }
+    }
+
+    /* ============ MODE MOBILE ============ */
+    @media (max-width: 768px) {
+      .hanging-vines {
+        width: 160px;
+        opacity: 0.7;
+      }
+      .vine::after {
+        font-size: 1.1rem;
+      }
+      .vine.v2::after,
+      .vine.v3::after,
+      .vine.v4::after,
+      .vine.v5::after { font-size: 1rem; }
+    }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- CURSEUR DOUX -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- FOND DÉCORATIF -->
+  <div class="bg-decor">
+    <div class="stone-wall"></div>
+    <div class="wood-nature"></div>
+    <div class="foliage"></div>
+    <div class="warm-halo halo1"></div>
+    <div class="warm-halo halo2"></div>
+    <div class="warm-halo halo3"></div>
+  </div>
+  <div class="vignette"></div>
+
+  <!-- LIANES SUSPENDUES COTÉ DROIT -->
+  <div class="hanging-vines" id="hangingVines"></div>
+
+  <div class="wrapper">
+
+    <!-- TITRE 2 LIGNES -->
+    <div class="main-title">
+      <div class="title-line">Le monde de</div>
+      <div class="title-line bold">petitemusareigne</div>
+    </div>
+
+    <!-- PHOTO CHAT SIAMOIS -->
+    <div class="cat-frame">
+      <img class="cat-img" src="http://www.image-heberg.fr/files/17915854133758606001.jpg" alt="Petit chaton siamois crème et noir">
+    </div>
+    <div class="cat-caption">✦ Mon petit compagnon ✦</div>
+
+    <!-- TEXTE POÉTIQUE -->
+    <div class="poetic-text">
+      <p>Bienvenue dans mon petit univers,</p>
+      <p>où la douceur d'un foyer rencontre la tendresse d'un regard.</p>
+      <span class="deco-line"></span>
+      <p>Quelques instants de calme, de lecture et de délicatesse.</p>
+      <p>Un coin de verdure, du bois chaud, une lumière de bougie…</p>
+      <span class="deco-line"></span>
+      <p>Et parfois, juste un petit chat qui dort.</p>
+    </div>
+
+    <!-- RÉSEAUX -->
+    <div class="socials-title">✧ Retrouvez-moi ✧</div>
+    <div class="socials">
+      <a class="social-btn tiktok" href="https://www.tiktok.com/@petitemusareigne" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.69a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.84-.12z"/>
+        </svg>
+        TikTok
+      </a>
+      <a class="social-btn instagram" href="https://www.instagram.com/petitemusareigne/" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.38C1.35 2.67.94 3.34.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.12.66.66 1.33 1.07 2.12 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.38.66-.66 1.07-1.33 1.38-2.12.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.12-.66-.66-1.33-1.07-2.12-1.38-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.41-10.85a1.44 1.44 0 1 0 0 2.88 1.44 1.44 0 0 0 0-2.88z"/>
+        </svg>
+        Instagram
+      </a>
+    </div>
+
+    <!-- SECTION DÉCO INTÉRIEURE -->
+    <div class="deco-section">
+      <div class="deco-title">✧ Mon petit univers déco ✧</div>
+      <div class="deco-grid">
+        <div class="deco-card">
+          <span class="deco-icon">🕯️</span>
+          <div class="deco-label">Bougies chaudes</div>
+        </div>
+        <div class="deco-card">
+          <span class="deco-icon">🏮</span>
+          <div class="deco-label">Lanternes douces</div>
+        </div>
+        <div class="deco-card">
+          <span class="deco-icon">🌿</span>
+          <div class="deco-label">Verdure délicate</div>
+        </div>
+        <div class="deco-card">
+          <span class="deco-icon">🪵</span>
+          <div class="deco-label">Bois chaleureux</div>
+        </div>
+        <div class="deco-card">
+          <span class="deco-icon">📖</span>
+          <div class="deco-label">Moments lecture</div>
+        </div>
+        <div class="deco-card">
+          <span class="deco-icon">🪨</span>
+          <div class="deco-label">Pierre naturelle</div>
+        </div>
+        <div class="deco-card">
+          <span class="deco-icon">🍂</span>
+          <div class="deco-label">Ambiance automne</div>
+        </div>
+        <div class="deco-card">
+          <span class="deco-icon">🐾</span>
+          <div class="deco-label">Petite tendresse</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIGNATURE -->
+    <div class="signature">
+      since @ petitemusareigne_2026
+    </div>
+
+  </div>
+
+  <script>
+    (function() {
+      const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      const isMobile = window.innerWidth <= 768;
+
+      /* ============ CURSEUR DOUX ============ */
+      const cursor = document.getElementById('cursor');
+      const cursorGlow = document.getElementById('cursorGlow');
+
+      if (!isTouch) {
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let glowX = mouseX;
+        let glowY = mouseY;
+
+        document.addEventListener('mousemove', (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          cursor.style.left = mouseX + 'px';
+          cursor.style.top = mouseY + 'px';
+        });
+
+        function animateGlow() {
+          glowX += (mouseX - glowX) * 0.12;
+          glowY += (mouseY - glowY) * 0.12;
+          cursorGlow.style.left = glowX + 'px';
+          cursorGlow.style.top = glowY + 'px';
+          requestAnimationFrame(animateGlow);
+        }
+        animateGlow();
+      } else {
+        if (cursor) cursor.remove();
+        if (cursorGlow) cursorGlow.remove();
+      }
+
+      /* ============ FEUILLES QUI TOMBENT ============ */
+      const leafSymbols = ['🍂', '🍁', '🌿', '🍃', '✦', '❋', '🪶'];
+
+      function spawnLeaf() {
+        if (isMobile && document.querySelectorAll('.falling-leaf').length >= 4) return;
+
+        const leaf = document.createElement('span');
+        leaf.className = 'falling-leaf';
+        leaf.textContent = leafSymbols[Math.floor(Math.random() * leafSymbols.length)];
+
+        leaf.style.left = Math.random() * 100 + '%';
+        leaf.style.fontSize = (isMobile ? 1 : 1.2) + Math.random() * 0.8 + 'rem';
+        leaf.style.opacity = 0.7;
+
+        const duration = 8 + Math.random() * 8;
+        leaf.style.animationDuration = duration + 's';
+
+        const drift = (Math.random() - 0.5) * 200;
+        leaf.animate(
+          [
+            { transform: `translate(0, 0) rotate(0deg)`, opacity: 0 },
+            { opacity: 0.9, offset: 0.1 },
+            { opacity: 0.9, offset: 0.9 },
+            { transform: `translate(${drift}px, 105vh) rotate(${360 + Math.random() * 360}deg)`, opacity: 0 }
+          ],
+          {
+            duration: duration * 1000,
+            easing: 'linear',
+            fill: 'forwards'
+          }
+        );
+
+        document.body.appendChild(leaf);
+        setTimeout(() => leaf.remove(), duration * 1000 + 200);
+      }
+
+      // Fréquence d'apparition des feuilles
+      const leafInterval = isMobile ? 3500 : 1800;
+      setInterval(spawnLeaf, leafInterval);
+
+      // Quelques feuilles au démarrage
+      for (let i = 0; i < 3; i++) {
+        setTimeout(spawnLeaf, i * 800);
+      }
+
+    })();
+
+
+      /* ============ LIANES SUSPENDUES ============ */
+      const vinesContainer = document.getElementById('hangingVines');
+
+      function createVine(config) {
+        const vine = document.createElement('div');
+        vine.className = 'vine ' + (config.variant || '');
+
+        // Position horizontale sur la largeur du conteneur
+        vine.style.right = config.x + 'px';
+
+        // Hauteur (longueur de la liane)
+        vine.style.height = config.height + 'px';
+
+        // Délai et durée de balancement aléatoires
+        vine.style.animationDelay = config.delay + 's';
+        vine.style.animationDuration = config.duration + 's';
+
+        // Ajout de bourgeons le long de la liane
+        const budCount = Math.floor(config.height / 60);
+        for (let i = 0; i < budCount; i++) {
+          const bud = document.createElement('span');
+          bud.className = 'bud';
+          bud.style.top = (15 + i * 60) + 'px';
+          bud.style.left = (i % 2 === 0 ? '60%' : '20%');
+          bud.style.animationDelay = (i * 0.3) + 's';
+          vine.appendChild(bud);
+        }
+
+        vinesContainer.appendChild(vine);
+      }
+
+      // Configuration des lianes : positions, hauteurs, variantes
+      const vineConfigs = [
+        { x: 20,  height: 200, variant: '',   delay: 0,   duration: 5.5 },
+        { x: 60,  height: 320, variant: 'v2', delay: 0.8, duration: 6.2 },
+        { x: 100, height: 260, variant: 'v3', delay: 1.5, duration: 5.8 },
+        { x: 140, height: 380, variant: 'v4', delay: 0.3, duration: 6.8 },
+        { x: 180, height: 240, variant: 'v5', delay: 1.2, duration: 5.4 },
+        { x: 220, height: 340, variant: 'v6', delay: 0.6, duration: 6.5 },
+        { x: 260, height: 280, variant: 'v7', delay: 1.8, duration: 5.9 },
+        { x: 40,  height: 160, variant: 'v3', delay: 2.1, duration: 6.0 },
+        { x: 120, height: 200, variant: 'v6', delay: 1.4, duration: 6.3 },
+        { x: 200, height: 180, variant: 'v2', delay: 0.9, duration: 5.7 }
+      ];
+
+      // Sur mobile, moins de lianes
+            const isMobileNow = window.innerWidth <= 768;
+      const activeConfigs = isMobileNow ? vineConfigs.filter((_, i) => i % 2 === 0) : vineConfigs;
+
+      activeConfigs.forEach(config => createVine(config));
+
+  </script>
+</body>
+</html>
